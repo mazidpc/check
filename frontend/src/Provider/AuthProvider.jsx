@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext } from 'react';
 import useCallData from '../customHooks/useCallData';
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const axiosData = useCallData();
