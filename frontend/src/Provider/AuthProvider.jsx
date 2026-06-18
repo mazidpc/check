@@ -8,14 +8,25 @@ const AuthProvider = ({ children }) => {
   const axiosData = useCallData();
 
   const {
-    data: user = null,
+    data: user,
     refetch,
     isLoading,
+    isError,
   } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
-      const res = await axiosData.get('/users/me');
-      return res.data.user;
+      try {
+        const res = await axiosData.get('/users/me');
+
+        // safety check (VERY IMPORTANT)
+        if (!res.data || !res.data.user) {
+          return null;
+        }
+
+        return res.data.user;
+      } catch (error) {
+        return null;
+      }
     },
     retry: false,
     staleTime: 0,
@@ -24,14 +35,22 @@ const AuthProvider = ({ children }) => {
   const handleLogout = async () => {
     try {
       await axiosData.post('/users/logout');
-      window.location.reload()
+      refetch(); // instead of reload (better UX)
     } catch (err) {
       console.log(err);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, refetch, isLoading, handleLogout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        refetch,
+        isLoading,
+        isError,
+        handleLogout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
