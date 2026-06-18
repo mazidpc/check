@@ -51,6 +51,7 @@ const Notes = () => {
 
   if (isLoading) {
     return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] px-5 py-10 relative py-20 overflow-x-hidden">
