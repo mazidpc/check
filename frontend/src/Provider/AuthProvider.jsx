@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 import useCallData from '../customHooks/useCallData';
 
 export const AuthContext = createContext(null);
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
         const res = await axiosData.get('/users/me');
 
         // safety check (VERY IMPORTANT)
-        if (!res.data || !res.data.user) {
+        if (!res?.data?.user) {
           return null;
         }
 
@@ -28,8 +28,9 @@ const AuthProvider = ({ children }) => {
         return null;
       }
     },
-    retry: false,
-    staleTime: 0,
+    retry: 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
   });
 
   const handleLogout = async () => {
@@ -37,20 +38,23 @@ const AuthProvider = ({ children }) => {
       await axiosData.post('/users/logout');
       refetch(); // instead of reload (better UX)
     } catch (err) {
-      console.log(err);
+      console.log('Logout error:', err);
     }
   };
 
+  const contextValue = useMemo(
+    () => ({
+      user: user || null,
+      refetch,
+      isLoading,
+      isError,
+      handleLogout,
+    }),
+    [user, isLoading, isError, refetch]
+  );
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        refetch,
-        isLoading,
-        isError,
-        handleLogout,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

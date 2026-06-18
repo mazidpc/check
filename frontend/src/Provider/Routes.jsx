@@ -19,31 +19,32 @@ import Leaderboard from "../pages/LeaderBoard/LeaderBoard";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
+    errorElement: <div className="flex items-center justify-center h-screen text-red-500">Page not found</div>,
     children: [
-      { path: '/', element: <Home /> },
-      { path: '/register', element: <Register /> },
-      { path: '/signin', element: <SignIn /> },
-      { path: '/signin/forgot-password', element: <ForgetPass /> },
-      { path: '/reset-password/:id/:token', element: <ResetPass /> },
-      { path: '/coverpage', element: <CoverPageGenerator /> },
-      { path: '/materials', element: <Notes /> },
-      { path: '/profile', element: <Profile /> },
-      { path: '/leaderboard', element: <Leaderboard /> },
+      { path: "/", element: <Home /> },
+      { path: "register", element: <Register /> },
+      { path: "signin", element: <SignIn /> },
+      { path: "signin/forgot-password", element: <ForgetPass /> },
+      { path: "reset-password/:id/:token", element: <ResetPass /> },
+      { path: "coverpage", element: <CoverPageGenerator /> },
+      { path: "materials", element: <Notes /> },
+      { path: "profile", element: <Profile /> },
+      { path: "leaderboard", element: <Leaderboard /> },
     ],
   },
   {
-    path: '/dashboard',
+    path: "dashboard",
     element: (
       <ValidUser>
         <DashBoard />
       </ValidUser>
     ),
     children: [
-      { path: '', element: <Dashboard /> },
+      { path: "", element: <Dashboard /> },
       {
-        path: 'users',
+        path: "users",
         element: (
           <AdminCr>
             <User />
@@ -51,14 +52,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'pending-materials',
+        path: "pending-materials",
         element: (
           <AdminCr>
             <PendingNotes />
           </AdminCr>
         ),
       },
-      { path: 'mymaterials', element: <MyNotes /> },
+      { path: "mymaterials", element: <MyNotes /> },
     ],
   },
 ]);
