@@ -1,22 +1,31 @@
 {
   "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { 
-        "distDir": "frontend/dist",
-        "buildCommand": "cd frontend && npm run build"
+      "src": "backend/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "zeroConfig": true
       }
-    },
-    {
-      "src": "backend/index.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/backend/index.js" },
-    { "src": "/(.*\\.(js|css|map|ico|png|jpg|jpeg|svg|json|txt|woff2?|eot|ttf))", "dest": "/frontend/dist/$1" },
-    { "src": "/.*", "dest": "/frontend/dist/index.html" }
-  ]
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/index.js"
+    },
+    {
+      "src": "/(.*\\.(js|css|map|ico|png|jpg|jpeg|svg|json|txt|woff2?|eot))",
+      "dest": "frontend/dist/$1"
+    },
+    {
+      "src": "/.*",
+      "dest": "frontend/dist/index.html"
+    }
+  ],
+  "env": {
+    "VITE_IMAGE_HOSTING": "@VITE_IMAGE_HOSTING"
+  }
 }
